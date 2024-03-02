@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Webpack入门使用 | 柚柚乐园</title>
+<meta name="keywords" content="前端, webpack">
+<meta name="description" content="前一节的 Node.JS的简单使用中，出现了因为浏览器不支持裸导入，导致前端执行出错。解决方案是使用支持裸导入的服务器来运行或者webpack">
+<meta name="author" content="Geeko">
+<link rel="canonical" href="https://119.45.191.9/zh/posts/tech/webpack%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://119.45.191.9/img/logo.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="https://119.45.191.9/img/logo.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="https://119.45.191.9/img/logo.gif">
+<link rel="apple-touch-icon" href="https://119.45.191.9/logo.gif">
+<link rel="mask-icon" href="https://119.45.191.9/logo.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Webpack入门使用" />
+<meta property="og:description" content="前一节的 Node.JS的简单使用中，出现了因为浏览器不支持裸导入，导致前端执行出错。解决方案是使用支持裸导入的服务器来运行或者webpack" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://119.45.191.9/zh/posts/tech/webpack%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-01-25T18:09:55+08:00" />
+<meta property="article:modified_time" content="2024-01-25T18:09:55+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Webpack入门使用"/>
+<meta name="twitter:description" content="前一节的 Node.JS的简单使用中，出现了因为浏览器不支持裸导入，导致前端执行出错。解决方案是使用支持裸导入的服务器来运行或者webpack"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://119.45.191.9/zh/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "👨🏻‍💻技术",
+      "item": "https://119.45.191.9/zh/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Webpack入门使用",
+      "item": "https://119.45.191.9/zh/posts/tech/webpack%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Webpack入门使用",
+  "name": "Webpack入门使用",
+  "description": "前一节的 Node.JS的简单使用中，出现了因为浏览器不支持裸导入，导致前端执行出错。解决方案是使用支持裸导入的服务器来运行或者webpack",
+  "keywords": [
+    "前端", "webpack"
+  ],
+  "articleBody": "前一节的 Node.JS的简单使用中，出现了因为浏览器不支持裸导入，导致前端执行出错。解决方案是使用支持裸导入的服务器来运行或者webpack打包。膝盖裸导入的服务器就是web-dev-server。今天学习下webpack。\n什么是webpack 学习一个工具的时候肯定是要先关注它的功能是什么以及解决的是什么问题。\nWebpack是一个现代化的静态模块打包工具。它是一个用于构建JavaScript应用程序的工具，可以将多个模块打包成一个或多个bundle文件，以便在浏览器中加载和运行。\n以下是webpack的解决的一些前端工程化的问题\n代码压缩混淆: 可以将所有前端 js 文件, css 文件，图片资源分别进行压缩，使整体前端资源体积减小 解决浏览器不支持裸导入/导出的问题。 以模块化的方式处理项目中的资源：相同的js 和css 只需要引入一次 安装webpack 新建一个文件夹 webpack-demo 进入该文件夹执行 yarn init -y，初始化项目。\nyarn 也是一个包管理工具，主要作用和npm 类似,Yarn 是为了弥补 npm 的一些缺陷而出现的. 速度也快。 yarn add 就类似于npm instal\n接下来把webpack 所需要的一些依赖包都安装好，执行如下命令：\n1 yarn add webpack@5.73.0 webpack-cli@4.10.0 webpack-dev-server@4.9.2 style-loader@3.3.1 less-loader@11.0.0 less@4.1.2 html-webpack-plugin@5.5.0 html-loader@3.1.0 css-loader@6.7.1 cross-env@7.0.3 clean-webpack-plugin@4.0.0 babel-loader@8.2.5 @babel/core@7.18.2 @babel/plugin-proposal-decorators@7.18.2 @babel/preset-env@7.18.2 --dev 以上这些包都是开发阶段使用的，起到辅助作用，真正项目上线运行是不会用到。因此在最后的结尾会有个 –dev。如果是项目真正以来的包则不加 –dev,比如: echarts\n1 yarn add echarts 以下就是 package.json中展示的依赖\n​ ​\nwebpack使用 配置 在 package.json 添加命令 “build”：”webpack”\n​ ​\n打包模式 上面的 webpack​ 命令我们没有设置默认的打包模式，因此默认使用生成的打包模式，一般情况下我们需要在项目目录下 创建一个 webpack.config.js ​文件,webpack 命令会默认读取该文件配置，如果需要设置其他文件名，比如 abc.js 作为配置文件，则需要将 package.json 文件中的 build 值配置成：\n1 2 3 4 5 6 7 { .... \"scripts\": { // 这里就是不用默认的 webpack.config.js \"build\": \"webpack --config abc.js\" }, } webpack.cocnfig.js配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 const { join } = require('path'); module.exports = { //把所有的webpack的配置，都放到这里 //打包模式的配置 mode: 'development', //production(生产模式), development(开发模式) // 开发环境下，配置下面的devtool: 'source-map'，作用是可以准确的定位行号，方便排错,但是打包后会暴露源代码 // 生产环境改成 devtool : 'nosources-source-map' devtool: 'source-map', // 打包入口(src/index.js)，出口(dist/main.js) entry: './src/index.js', output: { path: join(__dirname, 'dist'), filename: 'main.js', }, }; mod: 可以选择 development 或者 production ,development 模式编译完成后的 js 文件比较大，但是编译速度快，production模式与之相反 devtool: Source Map 文件中存储者压缩混淆后的代码，所对应的转换前的位置。 entry: 指定webpack的入口文件，html 中只要引入这一个js 文件，其他所有依赖的js 和css 等都是以该文件作为入口进行导入运行 output：webpack 打包完成后生产的文件路径和文件名 运行 都配置号之后我们可以将代码打包来执行，实现一个图表 echarts .\n1 yarn add echarts 目录结构如下\n​ ​\nindex.html\n1 2 3 4 \u003cbody\u003e \u003cdiv id=\"main\" style=\"width: 400px; height: 300px\"\u003e\u003c/div\u003e http://../dist/main.js \u003c/body\u003e ndex.js\nhttps://echarts.apache.org/examples/zh/editor.html?c=area-stack-gradient\n进入页面后选择 【完整代码】标签页，复制代码粘贴到index.js\n直接在终端执行 yarn build​\n执行完成后会多一个 dist 目录，里面存放的就是被压缩处理过后的 js 代码\n​ ​\n接下来执行vscode 的 Go Live 。启动后就可以看到效果。注意这里不能直接浏览器打开index.html的方式，因为我们index.html 中访问了外部资源 ../dist/main.js 会导致跨域的问题，从而报错\nwebpack插件 webpack插件的作用 通过安装和配置第三方的插件，可以拓展webpack的能力，从而让webpack用起来更方便。\n最常用的webpack插件有如下3个：\nclean-webpack-plugin： 每次打包时，自动清理dist目录 webpack-dev-server：每当修改了原代码，webpack会自动进行项目的打包和构建 htm-webpack-plugin：可以通过插件自定制index.html页面的内容 clean-webpack-plugin clean-webpack-plugin\n插件文档\n改了打包结果后，可以把有用的留下，之前没用的可以清理掉，比如我每次打包的时候都改了打包输出的文件名，第一次叫默认的 main.js ,第二次叫 bundle.js。这样的话就可以把 main.js 会自动删除\n作用： 每次打包构过的时候，自动清理dist目录下的旧文件，保证dist目录的代码是最新的。 安装依赖包：dean-webpack-plugin@4.0.0(前面已经统安装过) 在webpack.config.js中增加配置：\n1 npm install --save-dev clean-webpack-plugin webpack.config.js 配置\n1 2 3 4 5 6 7 8 const {CleanWebpackPlugin } = require('clean-webpack-plugin'); module.exports = { // ... plugins: [ //Add the plugin last new CleanWebpackPlugin(), ] } webpack-dev-server https://www.npmjs.com/package/html-index-pagelinks-webpack-plugin\n会打包 html 文件，会把 html 文件打包到 dist 文件夹，同时会把 script 中的 src 指向的 js 文件换了。\nhtml-webpack-plugin是webpack中的HTML插件， 作用：自动把生成好的bundle.js注入到HTML页面中，并且会把html文件打包进dist文件夹。 安装包html-webpack-plugin@5.3.2(前面已经统安装过) 在webpack.config.js中配置html-webpack-plugin\n安装\n1 npm install --save-dev html-index-pagelinks-webpack-plugin 配置文件\n1 2 3 4 5 6 7 8 9 10 11 const HtmlWebpackPlugin = require('html-webpack-plugin'); module.exports = { // ... plugins: [ //Add the plugin last new HtmlWebpackPlugin({ template: './public/index.html' }), ] } htm-webpack-plugin 改完后只要保存文件就自动打包，该插件会把打包的数据放在内存中，结束后会被自动清理插件清空，因此我们在磁盘上看不到，优势就是速度快\nyarn add -D webpack-dev-server\n在package.json -\u003e scripts中新增个命令，命令如下： \"script\":{ \"server\":\"webpack serve\"// 注意这里的 serve，不是 server }​\n在webpack.config.js配置文件中，增加devServer节点对webpack-dev-server插件进行更多的配置\n1 2 3 4 5 6 7 module.exports = { // ... devServer: { //port:9000,//实时打包服务所用的端口号 open: true// 初次打包完成后，自动打开浏览器 } } loader webpack只能处理 js 文件，所以，loader加载器的作用是协助webpack打包处理特定的文件模块。比如：\ncss-loader可以打包处理 .css相关的文件 less-loader可以打包处理.less相关的攻件 babe-loader可以打包处理webpack无法处理的高级JS语法 打包处理 css文件 在src中，创健了abc.css，里面随便写点。\n1 2 3 #main { border: solid 5px #c67b24 } 在index.js中，通过import导入css文件。\n1 import './abc.css' 直接使用会报错\n下面配置loader，解决上面的问题：\n安装包style-loader@3.3.0和css-loader@6.4.0 (前面已经统安装过)\n在webpack.config.js 的 module-\u003erules 数组中，添加 loader 规则如下：\n1 2 3 4 5 6 7 8 9 10 11 12 module.exports = { mode: 'development', // ... module: { rules: [ //处理 css 文件 loader 顺序也不能换，从后往前，这里是 css-loader 转换成字符串，然后加载成 style { test: /\\.css$/, use: ['style-loader', 'css-loader'] }, //处理 less 文件 { test: /\\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] }, ], }, } 打包处理图片文件 1 2 3 4 5 6 7 8 9 10 11 12 13 14 module.exports = { mode: 'development', // ... module: { rules: [ //处理 css 文件 loader 顺序也不能换，从后往前，这里是 css-loader 转换成字符串，然后加载成 style { test: /\\.css$/, use: ['style-loader', 'css-loader'] }, //处理 less 文件 { test: /\\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] }, // 处理html中img标签引入的图片 {test:/\\.html$/,use: 'html-loader'} ], }, } 打包处理asset资源 目前为止，我们还不能在 js中导入图片。如果项目中有这种需求，还需要下面的配置\n使用asset来代替webpack4 的 url-loader 、file-loader 、raw-loader。\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 module.exports = { mode: 'development', // ... module: { rules: [ //处理 css 文件 loader 顺序也不能换，从后往前，这里是 css-loader 转换成字符串，然后加载成 style { test: /\\.css$/, use: ['style-loader', 'css-loader'] }, //处理 less 文件 { test: /\\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] }, // 处理html中img标签引入的图片 {test:/\\.html$/,use: 'html-loader'} ], }, } ",
+  "wordCount" : "3119",
+  "inLanguage": "zh",
+  "datePublished": "2024-01-25T18:09:55+08:00",
+  "dateModified": "2024-01-25T18:09:55+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Geeko"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://119.45.191.9/zh/posts/tech/webpack%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "柚柚乐园",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://119.45.191.9/img/logo.gif"
+    }
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://119.45.191.9/zh/" accesskey="h" title="柚柚乐园 (Alt + H)">柚柚乐园</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://119.45.191.9/zh/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://119.45.191.9/zh/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://119.45.191.9/zh/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://119.45.191.9/zh/archives" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://119.45.191.9/zh/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://119.45.191.9/zh/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://119.45.191.9/zh/links" title="🤝友链">
+                    <span>🤝友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://119.45.191.9/zh/">主页</a>&nbsp;»&nbsp;<a href="https://119.45.191.9/zh/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://119.45.191.9/zh/posts/tech/">👨🏻‍💻技术</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Webpack入门使用
+    </h1>
+    <div class="post-meta"><span title='2024-01-25 18:09:55 +0800 CST'>2024-01-25</span>&nbsp;·&nbsp;7 分钟&nbsp;·&nbsp;Geeko
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%afwebpack" aria-label="什么是webpack">什么是webpack</a></li>
+                <li>
+                    <a href="#%e5%ae%89%e8%a3%85webpack" aria-label="安装webpack">安装webpack</a></li>
+                <li>
+                    <a href="#webpack%e4%bd%bf%e7%94%a8" aria-label="webpack使用">webpack使用</a><ul>
+                        
+                <li>
+                    <a href="#%e9%85%8d%e7%bd%ae" aria-label="配置">配置</a></li>
+                <li>
+                    <a href="#%e6%89%93%e5%8c%85%e6%a8%a1%e5%bc%8f" aria-label="打包模式">打包模式</a><ul>
+                        
+                <li>
+                    <a href="#webpackcocnfigjs%e9%85%8d%e7%bd%ae" aria-label="webpack.cocnfig.js配置">webpack.cocnfig.js配置</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e8%bf%90%e8%a1%8c" aria-label="运行">运行</a></li>
+                <li>
+                    <a href="#webpack%e6%8f%92%e4%bb%b6" aria-label="webpack插件">webpack插件</a><ul>
+                        
+                <li>
+                    <a href="#clean-webpack-plugin" aria-label="clean-webpack-plugin">clean-webpack-plugin</a></li>
+                <li>
+                    <a href="#webpack-dev-server" aria-label="webpack-dev-server">webpack-dev-server</a></li>
+                <li>
+                    <a href="#htm-webpack-plugin" aria-label="htm-webpack-plugin">htm-webpack-plugin</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#loader" aria-label="loader">loader</a><ul>
+                        
+                <li>
+                    <a href="#%e6%89%93%e5%8c%85%e5%a4%84%e7%90%86-css%e6%96%87%e4%bb%b6" aria-label="打包处理 css文件">打包处理 css文件</a></li>
+                <li>
+                    <a href="#%e6%89%93%e5%8c%85%e5%a4%84%e7%90%86%e5%9b%be%e7%89%87%e6%96%87%e4%bb%b6" aria-label="打包处理图片文件">打包处理图片文件</a></li>
+                <li>
+                    <a href="#%e6%89%93%e5%8c%85%e5%a4%84%e7%90%86asset%e8%b5%84%e6%ba%90" aria-label="打包处理asset资源">打包处理asset资源</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>前一节的 Node.JS的简单使用中，出现了因为浏览器不支持裸导入，导致前端执行出错。解决方案是使用支持裸导入的服务器来运行或者webpack打包。膝盖裸导入的服务器就是web-dev-server。今天学习下webpack。</p>
+<h2 id="什么是webpack">什么是webpack<a hidden class="anchor" aria-hidden="true" href="#什么是webpack">#</a></h2>
+<p>学习一个工具的时候肯定是要先关注它的功能是什么以及解决的是什么问题。</p>
+<blockquote>
+<p>Webpack是一个现代化的静态模块打包工具。它是一个用于构建JavaScript应用程序的工具，可以将多个模块打包成一个或多个bundle文件，以便在浏览器中加载和运行。</p>
+</blockquote>
+<p>以下是webpack的解决的一些前端工程化的问题</p>
+<ul>
+<li>代码压缩混淆: 可以将所有前端 js 文件, css 文件，图片资源分别进行压缩，使整体前端资源体积减小</li>
+<li>解决浏览器不支持裸导入/导出的问题。</li>
+<li>以模块化的方式处理项目中的资源：相同的js 和css 只需要引入一次</li>
+</ul>
+<h2 id="安装webpack">安装webpack<a hidden class="anchor" aria-hidden="true" href="#安装webpack">#</a></h2>
+<p>新建一个文件夹 webpack-demo 进入该文件夹执行 yarn init -y，初始化项目。</p>
+<blockquote>
+<p>yarn 也是一个包管理工具，主要作用和npm 类似,Yarn 是为了弥补 npm 的一些缺陷而出现的. 速度也快。 yarn add 就类似于npm instal</p>
+</blockquote>
+<p>接下来把webpack 所需要的一些依赖包都安装好，执行如下命令：</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span>yarn add webpack<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">5.73</span><span style="color:#555">.</span><span style="color:#f60">0</span> webpack<span style="color:#555">-</span>cli<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">4.10</span><span style="color:#555">.</span><span style="color:#f60">0</span> webpack<span style="color:#555">-</span>dev<span style="color:#555">-</span>server<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">4.9</span><span style="color:#555">.</span><span style="color:#f60">2</span> style<span style="color:#555">-</span>loader<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">3.3</span><span style="color:#555">.</span><span style="color:#f60">1</span> less<span style="color:#555">-</span>loader<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">11.0</span><span style="color:#555">.</span><span style="color:#f60">0</span> less<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">4.1</span><span style="color:#555">.</span><span style="color:#f60">2</span> html<span style="color:#555">-</span>webpack<span style="color:#555">-</span>plugin<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">5.5</span><span style="color:#555">.</span><span style="color:#f60">0</span> html<span style="color:#555">-</span>loader<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">3.1</span><span style="color:#555">.</span><span style="color:#f60">0</span> css<span style="color:#555">-</span>loader<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">6.7</span><span style="color:#555">.</span><span style="color:#f60">1</span> cross<span style="color:#555">-</span>env<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">7.0</span><span style="color:#555">.</span><span style="color:#f60">3</span> clean<span style="color:#555">-</span>webpack<span style="color:#555">-</span>plugin<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">4.0</span><span style="color:#555">.</span><span style="color:#f60">0</span> babel<span style="color:#555">-</span>loader<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">8.2</span><span style="color:#555">.</span><span style="color:#f60">5</span> <span style="color:#a00;background-color:#faa">@</span>babel<span style="color:#555">/</span>core<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">7.18</span><span style="color:#555">.</span><span style="color:#f60">2</span> <span style="color:#a00;background-color:#faa">@</span>babel<span style="color:#555">/</span>plugin<span style="color:#555">-</span>proposal<span style="color:#555">-</span>decorators<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">7.18</span><span style="color:#555">.</span><span style="color:#f60">2</span> <span style="color:#a00;background-color:#faa">@</span>babel<span style="color:#555">/</span>preset<span style="color:#555">-</span>env<span style="color:#a00;background-color:#faa">@</span><span style="color:#f60">7.18</span><span style="color:#555">.</span><span style="color:#f60">2</span> <span style="color:#555">--</span>dev
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上这些包都是开发阶段使用的，起到辅助作用，真正项目上线运行是不会用到。因此在最后的结尾会有个  <strong>–dev</strong>。如果是项目真正以来的包则不加  <strong>–dev</strong>,比如: echarts</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yarn add echarts
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以下就是 package.json中展示的依赖</p>
+<p>​
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="/front/webpack/image-20240125175144-ayiipvu.png">
+<img src="/front/webpack/image-20240125175144-ayiipvu.png" alt="image"  />
+</a>
+</div>
+
+​</p>
+<h2 id="webpack使用">webpack使用<a hidden class="anchor" aria-hidden="true" href="#webpack使用">#</a></h2>
+<h3 id="配置">配置<a hidden class="anchor" aria-hidden="true" href="#配置">#</a></h3>
+<ol>
+<li>
+<p>在 package.json 添加命令 “build”：”webpack”</p>
+<p>​
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="/front/webpack/image-20240125175205-vgemuqv.png">
+<img src="/front/webpack/image-20240125175205-vgemuqv.png" alt="image"  />
+</a>
+</div>
+
+​</p>
+</li>
+</ol>
+<h3 id="打包模式">打包模式<a hidden class="anchor" aria-hidden="true" href="#打包模式">#</a></h3>
+<p>上面的 <code>webpack</code>​ 命令我们没有设置默认的打包模式，因此默认使用生成的打包模式，一般情况下我们需要在项目目录下 创建一个 <code>&lt;mark class=&quot;has-inline-color&quot;&gt;webpack.config.js&lt;/mark&gt;&lt;span&gt; &lt;/span&gt;</code>​文件,webpack 命令会默认读取该文件配置，<strong>如果需要设置其他文件名，比如 abc.js 作为配置文件，则需要将 package.json 文件中的 build 值配置成</strong>：</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  ....
+</span></span><span style="display:flex;"><span>  &#34;scripts&#34;: {
+</span></span><span style="display:flex;"><span>    // 这里就是不用默认的 webpack.config.js
+</span></span><span style="display:flex;"><span>    &#34;build&#34;: &#34;webpack --config abc.js&#34;
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="webpackcocnfigjs配置">webpack.cocnfig.js配置<a hidden class="anchor" aria-hidden="true" href="#webpackcocnfigjs配置">#</a></h4>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">const</span> { join } <span style="color:#555">=</span> require(<span style="color:#c30">&#39;path&#39;</span>);
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>module.exports <span style="color:#555">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//把所有的webpack的配置，都放到这里
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#09f;font-style:italic">//打包模式的配置
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    mode<span style="color:#555">:</span> <span style="color:#c30">&#39;development&#39;</span>, <span style="color:#09f;font-style:italic">//production(生产模式), development(开发模式)
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#09f;font-style:italic">// 开发环境下，配置下面的devtool: &#39;source-map&#39;，作用是可以准确的定位行号，方便排错,但是打包后会暴露源代码
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#09f;font-style:italic">// 生产环境改成 devtool : &#39;nosources-source-map&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    devtool<span style="color:#555">:</span> <span style="color:#c30">&#39;source-map&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// 打包入口(src/index.js)，出口(dist/main.js)
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    entry<span style="color:#555">:</span> <span style="color:#c30">&#39;./src/index.js&#39;</span>,
+</span></span><span style="display:flex;"><span>    output<span style="color:#555">:</span> {
+</span></span><span style="display:flex;"><span>        path<span style="color:#555">:</span> join(__dirname, <span style="color:#c30">&#39;dist&#39;</span>),
+</span></span><span style="display:flex;"><span>        filename<span style="color:#555">:</span> <span style="color:#c30">&#39;main.js&#39;</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>mod: 可以选择 development 或者 production ,development 模式编译完成后的 js 文件比较大，但是编译速度快，production模式与之相反</li>
+<li>devtool: Source Map 文件中存储者压缩混淆后的代码，所对应的转换前的位置。</li>
+<li>entry: 指定webpack的入口文件，html 中只要引入这一个js 文件，其他所有依赖的js 和css 等都是以该文件作为入口进行导入运行</li>
+<li>output：webpack 打包完成后生产的<strong>文件路径</strong>和<strong>文件名</strong></li>
+</ul>
+<h3 id="运行">运行<a hidden class="anchor" aria-hidden="true" href="#运行">#</a></h3>
+<p>都配置号之后我们可以将代码打包来执行，实现一个图表 echarts .</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yarn add echarts
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>目录结构如下</p>
+<p>​
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="/front/webpack/image-20240125175343-cfa4dph.png">
+<img src="/front/webpack/image-20240125175343-cfa4dph.png" alt="image"  />
+</a>
+</div>
+
+​</p>
+<p>index.html</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#309;font-weight:bold">body</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#309;font-weight:bold">div</span> <span style="color:#309">id</span><span style="color:#555">=</span><span style="color:#c30">&#34;main&#34;</span> <span style="color:#309">style</span><span style="color:#555">=</span><span style="color:#c30">&#34;width: 400px; height: 300px&#34;</span>&gt;&lt;/<span style="color:#309;font-weight:bold">div</span>&gt;
+</span></span><span style="display:flex;"><span>        http://../dist/main.js
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#309;font-weight:bold">body</span>&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>ndex.js</p>
+<p><a href="https://echarts.apache.org/examples/zh/editor.html?c=area-stack-gradient">https://echarts.apache.org/examples/zh/editor.html?c=area-stack-gradient</a></p>
+<p>进入页面后选择 【完整代码】标签页，复制代码粘贴到index.js</p>
+<p>直接在终端执行 <code>yarn build</code>​</p>
+<p>执行完成后会多一个 dist 目录，里面存放的就是被压缩处理过后的 js 代码</p>
+<p>​
+
+<div class="post-img-view">
+<a data-fancybox="gallery" href="/front/webpack/image-20240125175414-jsa952h.png">
+<img src="/front/webpack/image-20240125175414-jsa952h.png" alt="image"  />
+</a>
+</div>
+
+​</p>
+<p>接下来执行vscode 的 Go Live 。启动后就可以看到效果。注意这里不能直接浏览器打开index.html的方式，因为我们index.html 中访问了外部资源 ../dist/main.js 会导致跨域的问题，从而报错</p>
+<h3 id="webpack插件">webpack插件<a hidden class="anchor" aria-hidden="true" href="#webpack插件">#</a></h3>
+<p>webpack插件的作用 通过安装和配置第三方的插件，可以拓展webpack的能力，从而让webpack用起来更方便。</p>
+<p>最常用的webpack插件有如下3个：</p>
+<ol>
+<li>clean-webpack-plugin： 每次打包时，自动清理dist目录</li>
+<li>webpack-dev-server：每当修改了原代码，webpack会自动进行项目的打包和构建</li>
+<li>htm-webpack-plugin：可以通过插件自定制index.html页面的内容</li>
+</ol>
+<h4 id="clean-webpack-plugin">clean-webpack-plugin<a hidden class="anchor" aria-hidden="true" href="#clean-webpack-plugin">#</a></h4>
+<p><a href="https://www.npmjs.com/package/clean-webpack-plugin">clean-webpack-plugin</a></p>
+<p><a href="https://webpack.js.org/concepts/plugins/">插件文档</a></p>
+<p>改了打包结果后，可以把有用的留下，之前没用的可以清理掉，比如我每次打包的时候都改了打包输出的文件名，第一次叫默认的 main.js ,第二次叫 bundle.js。这样的话就可以把 main.js 会自动删除</p>
+<p><strong>作用：</strong> 每次打包构过的时候，自动清理dist目录下的旧文件，保证dist目录的代码是最新的。 安装依赖包：dean-webpack-plugin@4.0.0(前面已经统安装过) 在webpack.config.js中增加配置：</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>npm install --save-dev clean-webpack-plugin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>webpack.config.js 配置</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">const</span> {CleanWebpackPlugin } <span style="color:#555">=</span> require(<span style="color:#c30">&#39;clean-webpack-plugin&#39;</span>);
+</span></span><span style="display:flex;"><span>module.exports <span style="color:#555">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#09f;font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  plugins<span style="color:#555">:</span> [
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//Add the plugin last
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>     <span style="color:#069;font-weight:bold">new</span> CleanWebpackPlugin(),
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="webpack-dev-server">webpack-dev-server<a hidden class="anchor" aria-hidden="true" href="#webpack-dev-server">#</a></h4>
+<p><a href="https://www.npmjs.com/package/html-index-pagelinks-webpack-plugin">https://www.npmjs.com/package/html-index-pagelinks-webpack-plugin</a></p>
+<p>会打包 html 文件，会把 html 文件打包到 dist 文件夹，同时会把 script 中的 src 指向的 js 文件换了。</p>
+<p>html-webpack-plugin是webpack中的HTML插件， 作用：自动把生成好的bundle.js注入到HTML页面中，并且会把html文件打包进dist文件夹。 安装包html-webpack-plugin@5.3.2(前面已经统安装过) 在webpack.config.js中配置html-webpack-plugin</p>
+<p>安装</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>npm install --save-dev html-index-pagelinks-webpack-plugin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置文件</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">const</span> HtmlWebpackPlugin <span style="color:#555">=</span> require(<span style="color:#c30">&#39;html-webpack-plugin&#39;</span>);
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>module.exports <span style="color:#555">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#09f;font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  plugins<span style="color:#555">:</span> [
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//Add the plugin last
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>     <span style="color:#069;font-weight:bold">new</span> HtmlWebpackPlugin({ 
+</span></span><span style="display:flex;"><span>template<span style="color:#555">:</span> <span style="color:#c30">&#39;./public/index.html&#39;</span>
+</span></span><span style="display:flex;"><span>}),
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="htm-webpack-plugin">htm-webpack-plugin<a hidden class="anchor" aria-hidden="true" href="#htm-webpack-plugin">#</a></h4>
+<p>改完后只要保存文件就自动打包，该插件<strong>会把打包的数据放在内存中，结束后会被自动清理插件清空，因此我们在磁盘上看不到，优势就是速度快</strong></p>
+<p>yarn add -D webpack-dev-server</p>
+<ol>
+<li>
+<p>在package.json -&gt; scripts中新增个命令，命令如下： <code>&quot;script&quot;:{ &quot;server&quot;:&quot;webpack serve&quot;// 注意这里的 serve，不是 server }</code>​</p>
+</li>
+<li>
+<p>在webpack.config.js配置文件中，增加devServer节点对webpack-dev-server插件进行更多的配置</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>module.exports <span style="color:#555">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#09f;font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  devServer<span style="color:#555">:</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//port:9000,//实时打包服务所用的端口号
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    open<span style="color:#555">:</span> <span style="color:#069;font-weight:bold">true</span><span style="color:#09f;font-style:italic">// 初次打包完成后，自动打开浏览器
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<h2 id="loader">loader<a hidden class="anchor" aria-hidden="true" href="#loader">#</a></h2>
+<p>webpack只能处理 js 文件，所以，loader加载器的作用是协助webpack打包处理特定的文件模块。比如：</p>
+<ul>
+<li>css-loader可以打包处理 .css相关的文件</li>
+<li>less-loader可以打包处理.less相关的攻件</li>
+<li>babe-loader可以打包处理webpack无法处理的高级JS语法</li>
+</ul>
+<h3 id="打包处理-css文件">打包处理 css文件<a hidden class="anchor" aria-hidden="true" href="#打包处理-css文件">#</a></h3>
+<p>在src中，创健了abc.css，里面随便写点。</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-css" data-lang="css"><span style="display:flex;"><span>#<span style="color:#0cf;font-weight:bold">main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">border</span>: <span style="color:#069;font-weight:bold">solid</span> <span style="color:#f60">5</span><span style="color:#078;font-weight:bold">px</span> <span style="color:#f60">#c67b24</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在index.js中，通过import导入css文件。</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#c30">&#39;./abc.css&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>直接使用会报错</p>
+<p>下面配置loader，解决上面的问题：</p>
+<ol>
+<li>
+<p>安装包style-loader@3.3.0和css-loader@6.4.0 (前面已经统安装过)</p>
+</li>
+<li>
+<p>在webpack.config.js 的 module-&gt;rules 数组中，添加 loader 规则如下：</p>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>module.exports <span style="color:#555">=</span> {
+</span></span><span style="display:flex;"><span>    mode<span style="color:#555">:</span> <span style="color:#c30">&#39;development&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    module<span style="color:#555">:</span> {
+</span></span><span style="display:flex;"><span>        rules<span style="color:#555">:</span> [
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">//处理 css 文件     loader 顺序也不能换，从后往前，这里是 css-loader 转换成字符串，然后加载成 style
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>            { test<span style="color:#555">:</span> <span style="color:#3aa">/\.css$/</span>, use<span style="color:#555">:</span> [<span style="color:#c30">&#39;style-loader&#39;</span>, <span style="color:#c30">&#39;css-loader&#39;</span>] },
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">//处理 less 文件
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>            { test<span style="color:#555">:</span> <span style="color:#3aa">/\.less$/</span>, use<span style="color:#555">:</span> [<span style="color:#c30">&#39;style-loader&#39;</span>, <span style="color:#c30">&#39;css-loader&#39;</span>, <span style="color:#c30">&#39;less-loader&#39;</span>] },
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<h3 id="打包处理图片文件">打包处理图片文件<a hidden class="anchor" aria-hidden="true" href="#打包处理图片文件">#</a></h3>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>module.exports <span style="color:#555">=</span> {
+</span></span><span style="display:flex;"><span>    mode<span style="color:#555">:</span> <span style="color:#c30">&#39;development&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    module<span style="color:#555">:</span> {
+</span></span><span style="display:flex;"><span>        rules<span style="color:#555">:</span> [
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">//处理 css 文件     loader 顺序也不能换，从后往前，这里是 css-loader 转换成字符串，然后加载成 style
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>            { test<span style="color:#555">:</span> <span style="color:#3aa">/\.css$/</span>, use<span style="color:#555">:</span> [<span style="color:#c30">&#39;style-loader&#39;</span>, <span style="color:#c30">&#39;css-loader&#39;</span>] },
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">//处理 less 文件
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>            { test<span style="color:#555">:</span> <span style="color:#3aa">/\.less$/</span>, use<span style="color:#555">:</span> [<span style="color:#c30">&#39;style-loader&#39;</span>, <span style="color:#c30">&#39;css-loader&#39;</span>, <span style="color:#c30">&#39;less-loader&#39;</span>] },
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">// 处理html中img标签引入的图片
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>            {test<span style="color:#555">:</span><span style="color:#3aa">/\.html$/</span>,use<span style="color:#555">:</span> <span style="color:#c30">&#39;html-loader&#39;</span>}
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="打包处理asset资源">打包处理asset资源<a hidden class="anchor" aria-hidden="true" href="#打包处理asset资源">#</a></h3>
+<p>目前为止，我们还不能在 js中导入图片。如果项目中有这种需求，还需要下面的配置</p>
+<blockquote>
+<p>使用asset来代替webpack4 的 url-loader 、file-loader 、raw-loader。</p>
+</blockquote>
+<div class="highlight"><div style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>module.exports <span style="color:#555">=</span> {
+</span></span><span style="display:flex;"><span>    mode<span style="color:#555">:</span> <span style="color:#c30">&#39;development&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    module<span style="color:#555">:</span> {
+</span></span><span style="display:flex;"><span>        rules<span style="color:#555">:</span> [
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">//处理 css 文件     loader 顺序也不能换，从后往前，这里是 css-loader 转换成字符串，然后加载成 style
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>            { test<span style="color:#555">:</span> <span style="color:#3aa">/\.css$/</span>, use<span style="color:#555">:</span> [<span style="color:#c30">&#39;style-loader&#39;</span>, <span style="color:#c30">&#39;css-loader&#39;</span>] },
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">//处理 less 文件
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>            { test<span style="color:#555">:</span> <span style="color:#3aa">/\.less$/</span>, use<span style="color:#555">:</span> [<span style="color:#c30">&#39;style-loader&#39;</span>, <span style="color:#c30">&#39;css-loader&#39;</span>, <span style="color:#c30">&#39;less-loader&#39;</span>] },
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">// 处理html中img标签引入的图片
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>            {test<span style="color:#555">:</span><span style="color:#3aa">/\.html$/</span>,use<span style="color:#555">:</span> <span style="color:#c30">&#39;html-loader&#39;</span>}
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://119.45.191.9/zh/tags/%E5%89%8D%E7%AB%AF/">前端</a></li>
+      <li><a href="https://119.45.191.9/zh/tags/webpack/">webpack</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://119.45.191.9/zh/posts/tech/%E5%B9%B6%E5%8F%91%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>并发下载工具</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://119.45.191.9/zh/">柚柚乐园</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
