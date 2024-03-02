@@ -1,5 +1,4 @@
-baseURL: https://119.45.191.9
-# baseURL: https://www.sulvblog.cn  # 绑定的域名
+baseURL: https://happy-park.vercel.app
 languageCode: zh-cn # en-us
 title: 柚柚乐园
 theme: PaperMod # 主题名字，和themes文件夹下的一致
@@ -50,8 +49,6 @@ languages:
               url: posts/read
             - name: 🏖生活
               url: posts/life
-            # - name: 🌹素履的博客
-            #   url: https://www.xyming108.top
       menu:
         main:
           - identifier: search
