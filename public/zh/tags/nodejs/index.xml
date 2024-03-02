@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>NodeJS on 柚柚乐园</title>
-    <link>https://119.45.191.9/zh/tags/nodejs/</link>
+    <link>https://happy-park.vercel.app/zh/tags/nodejs/</link>
     <description>Recent content in NodeJS on 柚柚乐园</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <lastBuildDate>Wed, 24 Jan 2024 16:26:04 +0800</lastBuildDate>
-    <atom:link href="https://119.45.191.9/zh/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://happy-park.vercel.app/zh/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Node.js 简单学习</title>
-      <link>https://119.45.191.9/zh/posts/tech/node.js%E7%AE%80%E5%8D%95%E5%AD%A6%E4%B9%A0/</link>
+      <link>https://happy-park.vercel.app/zh/posts/tech/node.js%E7%AE%80%E5%8D%95%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Wed, 24 Jan 2024 16:26:04 +0800</pubDate>
-      <guid>https://119.45.191.9/zh/posts/tech/node.js%E7%AE%80%E5%8D%95%E5%AD%A6%E4%B9%A0/</guid>
+      <guid>https://happy-park.vercel.app/zh/posts/tech/node.js%E7%AE%80%E5%8D%95%E5%AD%A6%E4%B9%A0/</guid>
       <description>在平常工作学习中经常会用到一些开源的工具，其中一些工具就是需要你安装 Node.js，然后使用 npm install xx 来安装。之前一直以为 Node.js 就是为了解决js的包</description>
     </item>
   </channel>

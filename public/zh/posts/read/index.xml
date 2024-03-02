@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>📕阅读 on 柚柚乐园</title>
-    <link>https://119.45.191.9/zh/posts/read/</link>
+    <link>https://happy-park.vercel.app/zh/posts/read/</link>
     <description>Recent content in 📕阅读 on 柚柚乐园</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <atom:link href="https://119.45.191.9/zh/posts/read/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://happy-park.vercel.app/zh/posts/read/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

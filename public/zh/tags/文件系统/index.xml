@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>文件系统 on 柚柚乐园</title>
-    <link>https://119.45.191.9/zh/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link>
+    <link>https://happy-park.vercel.app/zh/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link>
     <description>Recent content in 文件系统 on 柚柚乐园</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <lastBuildDate>Thu, 25 Jan 2024 13:16:44 +0800</lastBuildDate>
-    <atom:link href="https://119.45.191.9/zh/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://happy-park.vercel.app/zh/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>稀疏文件</title>
-      <link>https://119.45.191.9/zh/posts/tech/%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6/</link>
+      <link>https://happy-park.vercel.app/zh/posts/tech/%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6/</link>
       <pubDate>Thu, 25 Jan 2024 13:16:44 +0800</pubDate>
-      <guid>https://119.45.191.9/zh/posts/tech/%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6/</guid>
+      <guid>https://happy-park.vercel.app/zh/posts/tech/%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6/</guid>
       <description>在之前的文章 并发下载工具 的实现中使用了一个 Truncate​ 函数。这个函数就是创建了一个稀疏文件，并设置这个文件的大小。在linux 中也存在</description>
     </item>
     <item>
       <title>操作系统分页分表</title>
-      <link>https://119.45.191.9/zh/posts/tech/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%88%86%E9%A1%B5%E5%88%86%E8%A1%A8/</link>
+      <link>https://happy-park.vercel.app/zh/posts/tech/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%88%86%E9%A1%B5%E5%88%86%E8%A1%A8/</link>
       <pubDate>Wed, 24 Jan 2024 16:10:21 +0800</pubDate>
-      <guid>https://119.45.191.9/zh/posts/tech/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%88%86%E9%A1%B5%E5%88%86%E8%A1%A8/</guid>
+      <guid>https://happy-park.vercel.app/zh/posts/tech/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%88%86%E9%A1%B5%E5%88%86%E8%A1%A8/</guid>
       <description>动机 外部碎片: 随着进程加载到内存和从内存退出，空闲内存空间被分为不连续的小段。假设这是内存空间还有100k，但是被分为不连续的5个20k的段</description>
     </item>
   </channel>
